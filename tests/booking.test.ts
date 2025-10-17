@@ -1,9 +1,9 @@
 import request from 'supertest';
-import { app } from '../src/server'; // Adjust the import based on your server file location
+import app from '../src/app'; // Adjust the import based on your server file location
 import { Customer } from '../src/models/customer.model';
 
 describe('Booking Endpoints', () => {
-  it('throws an error if email already exists', async () => {
+  it('throws an error if email already exists but is using different identification details', async () => {
     // First, create a customer with a specific email
     await Customer.create({
       firstName: 'John',
@@ -12,19 +12,32 @@ describe('Booking Endpoints', () => {
       phone: '1234567890',
     });
 
-    const res = await request(app).post('/api/booking/book-table');
+    const tableBookingResponse = await request(app)
+      .post('/api/booking/book-table')
+      .send({
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'john.doe@gmail.com',
+        phone: '1234567890',
+      });
     // Attempt to create another customer with the same email
-    expect(res.status).toBe(410);
-    expect(res.body.message).toBe('Email already exists');
+    expect(tableBookingResponse.status).toBe(410);
+    expect(tableBookingResponse.body.message).toBe('Email already exists');
 
-    const res = await request(app).post('/api/booking/book-hotel-room');
+    const hotelBookingResponse = await request(app).post(
+      '/api/booking/book-hotel-room'
+    );
 
-    expect(res.status).toBe(410);
-    expect(res.body.message).toBe('Email already exists');
+    expect(hotelBookingResponse.status).toBe(410);
+    expect(hotelBookingResponse.body.message).toBe('Email already exists');
 
-    const res = await request(app).post('/api/booking/book-function-room');
+    const functionRoomBookingResponse = await request(app).post(
+      '/api/booking/book-function-room'
+    );
 
-    expect(res.status).toBe(410);
-    expect(res.body.message).toBe('Email already exists');
+    expect(functionRoomBookingResponse.status).toBe(410);
+    expect(functionRoomBookingResponse.body.message).toBe(
+      'Email already exists'
+    );
   });
 });

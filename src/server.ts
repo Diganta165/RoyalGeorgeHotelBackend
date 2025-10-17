@@ -1,28 +1,37 @@
 const express = require('express');
 const session = require('express-session');
 const dotenv = require('dotenv');
-import connectDB from './config/db';
 
 dotenv.config();
 
-export const app = express();
+import app from './app';
+import connectDB from './config/db';
+
+const PORT = process.env.PORT || 4000;
 
 // Routes
 const bookingRoutes = require('../routes/bookingRoutes');
 
-(async () => {
+const startServer = async () => {
   try {
-    app.use('/api/booking', bookingRoutes);
-    app.use(express.json());
+    // ✅ Jest sets NODE_ENV=test *before* this file executes
+    if (process.env.NODE_ENV !== 'test') {
+      console.log('Connecting to DB in environment:', process.env.NODE_ENV);
+      await connectDB();
+    } else {
+      console.log('Running in test mode — skipping DB connection');
+    }
 
-    // Connect to MongoDB
-    await connectDB();
-
-    const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
-  } catch (error) {
-    console.error('DB Bootstrap Failed: ', error);
+  } catch (err) {
+    console.error('Bootstrap failed:', err);
+    process.exit(1);
   }
-})();
+};
+
+// ✅ Run only if not imported (e.g., by Jest)
+if (require.main === module) {
+  startServer();
+}
