@@ -9,6 +9,8 @@ import connectDB from './config/db';
 
 const PORT = process.env.PORT || 4000;
 
+console.log('branch create');
+
 // Routes
 const bookingRoutes = require('../routes/bookingRoutes');
 
