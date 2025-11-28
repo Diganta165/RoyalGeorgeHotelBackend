@@ -11,7 +11,7 @@
     "dev:full": "npm run mongo:up && npm run wait:mongo && npm run dev",
     "mongo:restart": "npm run mongo:down && npm run mongo:up",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watchAll"
   },
   "author": "",
   "license": "ISC",

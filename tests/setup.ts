@@ -12,6 +12,11 @@ beforeAll(async () => {
   await mongoose.connect(uri);
 });
 
+afterEach(async () => {
+  const collections = await mongoose.connection.db?.collections();
+  if (collections) for (let col of collections) await col.deleteMany({});
+});
+
 beforeEach(async () => {
   // Reset all collections between tests
   const collections = await mongoose.connection.db?.collections();
@@ -26,4 +31,5 @@ beforeEach(async () => {
 afterAll(async () => {
   if (mongo) await mongo.stop();
   await mongoose.connection.close();
+  await mongo.stop();
 });
