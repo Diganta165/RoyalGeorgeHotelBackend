@@ -37,3 +37,29 @@ const startServer = async () => {
 if (require.main === module) {
   startServer();
 }
+
+
+// test code
+const startTestServer = async () => {
+  try {
+    // ✅ Jest sets NODE_ENV=test *before* this file executes
+    if (process.env.NODE_ENV !== 'test') {
+      console.log('Connecting to DB in environment:', process.env.NODE_ENV);
+      await connectDB();
+    } else {
+      console.log('Running in test mode — skipping DB connection');
+    }
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Bootstrap failed:', err);
+    process.exit(1);
+  }
+};
+
+// ✅ Run only if not imported (e.g., by Jest)
+if (require.main === module) {
+  startServer();
+}
