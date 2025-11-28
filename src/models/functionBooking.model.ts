@@ -5,7 +5,7 @@ const functionBookingSchema = new Schema(
   {
     customer: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
     preferredArea: { type: String, required: true },
-    message: { type: String },
+    message: { type: String, required: true },
     bookingDate: { type: Date, required: true },
     timeSlot: { type: String, required: true },
   },
