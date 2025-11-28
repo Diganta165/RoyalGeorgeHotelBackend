@@ -8,4 +8,7 @@ router.post('/book-hotel-room', bookingController.bookHotelRoom);
 
 router.post('/book-function-room', bookingController.bookFunctionRoom);
 
+// test route
+router.post('/book-test', bookingController.bookFunctionRoom);
+
 module.exports = router;
